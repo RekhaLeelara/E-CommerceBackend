@@ -21,7 +21,7 @@ ProductTag.init(
       type: DataTypes.INTEGER,
       references: {
         // TODO: Add a comment describing where `reader` comes from
-        model: 'Product',
+        model: 'product',
         key: 'id'
       }
     },
@@ -29,7 +29,7 @@ ProductTag.init(
       type: DataTypes.INTEGER,
       references: {
         // TODO: Add a comment describing where `reader` comes from
-        model: 'Tag',
+        model: 'tag',
         key: 'id'
       }
     }

@@ -37,6 +37,7 @@ Product.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       // How to "Set a default value of 10"
+      defaultValue: 10,
       validate: {
         isNumeric: true
       }
@@ -45,7 +46,7 @@ Product.init(
       type: DataTypes.INTEGER,
       references: {
         // TODO: Add a comment describing where `reader` comes from
-        model: 'Category',
+        model: 'category',
         key: 'id'
       }
     }
