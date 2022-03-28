@@ -8,6 +8,18 @@ router.get('/', (req, res) => {
   // find all products
   // be sure to include its associated Category and Tag data
   Product.findAll({
+    attributes: ['id', 'product_name', 'price', 'stock'],
+    include:[
+      {      
+        model: Category,
+        attributes: ['category_name']
+      },
+      {
+        model: Tag,
+        attributes: ['tag_name']
+      }
+
+    ]
   })
     .then(dbUserData => res.json(dbUserData))
     .catch(err => {
@@ -16,57 +28,36 @@ router.get('/', (req, res) => {
     });
 });
 
-// get one product
-// router.get('/:id', (req, res) => {
-//   // find a single product by its `id`
-//   // be sure to include its associated Category and Tag data
-//   // ProductTag.update(req.body, {
-//   //   where: {
-//   //     id: req.params.id,
-//   //   },
-//   // })
-//   //   .then((product) => {
-//   //     // find all associated tags from ProductTag
-//   //     return Product.findAll({ where: { category_id: product.id } });
-//   //   })
-
-//     Product.findAll({
-//       where: {product_id: req.params.id},
-//       include: [{
-//         model: Category,
-//        }]
-//       })
-
-//     .then(dbUserData => {
-//       if (!dbUserData) {
-//         res.status(404).json({ message: 'No Product found with this id' });
-//         return;
-//       }
-//       res.json(dbUserData);
-//     })
-
-//     .catch(err => {
-//       console.log(err);
-//       res.status(500).json(err);
-//     });
-    
-// });
-
-router.get('/:id', async (req, res) => {
-  try {
-    const prodData = await Product.findByPk(req.params.id, {
-      include: [{ model: ProductTag }],
+router.get('/:id', (req, res) => {
+  // find a single product by its `id`
+  // be sure to include its associated Category and Tag data
+  Product.findOne({
+    where: {
+      id: req.params.id
+    },
+    attributes: ['id', 'product_name', 'price', 'stock'],
+    include: [
+      {
+        model: Category,
+        attributes: ['category_name']
+      },
+      {
+        model: Tag,
+        attributes: ['tag_name']
+      }
+    ]
+  })
+    .then(dbProductData => {
+      if (!dbProductData) {
+        res.status(404).json({message: 'No product found with this id'});
+        return;
+      }
+      res.json(dbProductData);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
     });
-
-    if (!prodData) {
-      res.status(404).json({ message: 'No reader found with that id!' });
-      return;
-    }
-
-    res.status(200).json(prodData);
-  } catch (err) {
-    res.status(500).json(err.toString());
-  }
 });
 
 // create new product
